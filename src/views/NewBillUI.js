@@ -1,8 +1,7 @@
-import VerticalLayout from './VerticalLayout.js'
+import VerticalLayout from "./VerticalLayout.js";
 
 export default () => {
-
-  return (`
+  return `
     <div class='layout'>
       ${VerticalLayout(120)}
       <div class='content'>
@@ -55,8 +54,9 @@ export default () => {
                   </div>
                   <div class="col-half">
                     <label for="file" class="bold-label">Justificatif</label>
-                    <input required type="file" class="form-control blue-border" data-testid="file" />
-                  </div>
+                    <input required type="file" accept="image/jpeg", "image/jpg", "image/svg" class="form-control blue-border" data-testid="file" />
+                    <p class= "message" hidden id = "message"> Merci de bien vouloir utiliser le bon format d'image (JPEG, JPG ou PNG) </p>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -70,5 +70,7 @@ export default () => {
         </div>
       </div>
     </div>
-  `)
-}
+  `;
+};
+// I added accept="image/jpeg and other format, which doesnt allows the other extensions "
+// I added a p tag to display an error message when a incorrect format is added.
