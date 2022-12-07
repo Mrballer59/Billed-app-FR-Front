@@ -9,7 +9,7 @@ import { ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
 
 import router from "../app/Router.js";
-
+// test page employée for the receipt
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
     test("Then bill icon in vertical layout should be highlighted", async () => {
@@ -30,8 +30,10 @@ describe("Given I am connected as an employee", () => {
       await waitFor(() => screen.getByTestId("icon-window"));
       const windowIcon = screen.getByTestId("icon-window");
       //to-do write expect expression
-      expect(windowIcon.className).toContain("active-icon");
+      //added mention as asked in the kanban
+      expect(windowIcon.classList.contains("active-icon")).toBe(true); // This has to be true instead of false.
     });
+
     test("Then bills should be ordered from earliest to latest", () => {
       document.body.innerHTML = BillsUI({ data: bills });
       const dates = screen
@@ -39,7 +41,9 @@ describe("Given I am connected as an employee", () => {
           /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i
         )
         .map((a) => a.innerHTML);
-      const antiChrono = (a, b) => (a < b ? 1 : -1);
+      //Change the to sorting.
+      //[Bug report] - Bills
+      const antiChrono = (a, b) => a - b;
       const datesSorted = [...dates].sort(antiChrono);
       expect(dates).toEqual(datesSorted);
     });

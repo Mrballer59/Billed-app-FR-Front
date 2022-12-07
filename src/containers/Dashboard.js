@@ -153,7 +153,8 @@ export default class {
       $(`#status-bills-container${this.index}`).html("");
       this.counter++;
     }
-    // here is where the click events is in place for all of the clicks replaced the click to .off jquery
+    //[Bug Hunt] - Dashboard
+    // Here is where the click events is in place for all of the clicks replaced the click to .off jquery
     bills.forEach((bill) => {
       $(`#open-bill${bill.id}`)
         .off("click")
