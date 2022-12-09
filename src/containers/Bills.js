@@ -7,6 +7,7 @@ export default class {
     this.document = document;
     this.onNavigate = onNavigate;
     this.store = store;
+    //starts from here the 1st funtion tested
     const buttonNewBill = document.querySelector(
       `button[data-testid="btn-new-bill"]`
     );
@@ -25,6 +26,7 @@ export default class {
   };
 
   handleClickIconEye = (icon) => {
+    // this is where the modal opens
     const billUrl = icon.getAttribute("data-bill-url");
     const imgWidth = Math.floor($("#modaleFile").width() * 0.5);
     $("#modaleFile")
