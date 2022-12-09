@@ -2,11 +2,12 @@
  * @jest-environment jsdom
  */
 
-import { screen, waitFor } from "@testing-library/dom";
+import { fireEvent, screen, waitFor } from "@testing-library/dom";
 import BillsUI from "../views/BillsUI.js";
 import { bills } from "../fixtures/bills.js";
-import { ROUTES_PATH } from "../constants/routes.js";
+import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
+import Bills from "../containers/Bills.js";
 
 import router from "../app/Router.js";
 // test page employée for the receipt
@@ -35,6 +36,7 @@ describe("Given I am connected as an employee", () => {
     });
 
     test("Then bills should be ordered from earliest to latest", () => {
+      // the tickets/ bills are suppose to be earliste to oldest
       document.body.innerHTML = BillsUI({ data: bills });
       const dates = screen
         .getAllByText(
@@ -47,5 +49,35 @@ describe("Given I am connected as an employee", () => {
       const datesSorted = [...dates].sort(antiChrono);
       expect(dates).toEqual(datesSorted);
     });
+  });
+});
+//This part is test handleClickIconEye ligne 14 containers/Bills.js
+describe("when a user clicks on the eye icon", () => {
+  test("Then the modal should open", () => {
+    // the test the shows the click on the Eye Icon
+    Object.defineProperty(window, localStorage, { value: localStorageMock });
+    window.localStorage.setItem("user", JSON.stringify({ type: "Employee" }));
+    const html = BillsUI({ data: bills });
+    document.body.innerHTML = html;
+    const onNavigate = (pathname) => {
+      document.body.innerHTML = ROUTES({ pathname });
+    };
+    const billsContainer = new Bills({
+      document,
+      onNavigate,
+      localStorage: localStorageMock,
+      store: null,
+    });
+    //Mocked Modal the fn stands for function
+    $.fn.modal = jest.fn();
+    //Mocked the clickHandle icon
+    const handleClickIconEye = jest.fn(() => {
+      billsContainer.handleClickIconEye;
+    });
+    const firstEyeIcon = screen.getAllByTestId("icon-eye")[0];
+    firstEyeIcon.addEventListener("click", handleClickIconEye);
+    fireEvent.click(firstEyeIcon);
+    expect(handleClickIconEye).toHaveBeenCalled();
+    expect($.fn.modal).toHaveBeenCalled;
   });
 });
