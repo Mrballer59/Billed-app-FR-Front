@@ -38,6 +38,7 @@ export default class {
   };
 
   getBills = () => {
+    // getting info from the store
     if (this.store) {
       return this.store
         .bills()

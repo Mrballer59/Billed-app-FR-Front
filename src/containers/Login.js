@@ -47,6 +47,7 @@ export default class Login {
   };
   //[Bug report] - Login
   handleSubmitAdmin = (e) => {
+    console.log("object");
     e.preventDefault();
     const user = {
       type: "Admin",
@@ -64,12 +65,13 @@ export default class Login {
         this.onNavigate(ROUTES_PATH["Dashboard"]);
         this.PREVIOUS_LOCATION = ROUTES_PATH["Dashboard"];
         PREVIOUS_LOCATION = this.PREVIOUS_LOCATION;
-        document.body.style.backgroundColor = "#fff";
+        this.document.body.style.backgroundColor = "#fff";
       });
   };
 
   // not need to cover this function by tests
   login = (user) => {
+    console.log("object");
     if (this.store) {
       return this.store
         .login(
