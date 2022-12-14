@@ -10,6 +10,9 @@ import { localStorageMock } from "../__mocks__/localStorage.js";
 import Bills from "../containers/Bills.js";
 import mockStore from "../__mocks__/store";
 import router from "../app/Router.js";
+import NewBillUI from "../views/NewBillUI.js";
+
+jest.mock("../app/Store", () => mockStore);
 // test page employée for the receipt
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
@@ -42,7 +45,7 @@ describe("Given I am connected as an employee", () => {
           /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i
         )
         .map((a) => a.innerHTML);
-      const antiChrono = (a, b) => (a > b ? 1 : -1);
+      const antiChrono = (a, b) => (a < b ? 1 : -1);
       const datesSorted = [...dates].sort(antiChrono);
       expect(dates).toEqual(datesSorted);
     });
@@ -115,9 +118,58 @@ describe("When I get bills", () => {
       store: mockStore,
       localStorage: window.localStorage,
     });
-    const getBills = jest.fn(() => bills.getBills());
+    const getBills = jest.fn(() => bills.getBills()); //mocked Bills
     const value = await getBills();
-    expect(getBills).toHaveBeenCalled();
+    expect(getBills).toHaveBeenCalled(); //checking of the method is called
     expect(value.length).toBe(4);
+  });
+});
+// Test Erreur 404 et 500
+
+describe("when a error occurs with the API", () => {
+  beforeEach(() => {
+    jest.spyOn(mockStore, "bills");
+    Object.defineProperty(window, "localStorage", {
+      value: localStorageMock,
+    });
+    window.localStorage.setItem(
+      "user",
+      JSON.stringify({
+        type: "Employee",
+        email: "a@a",
+      })
+    );
+    const root = document.createElement("div");
+    root.setAttribute("id", "root");
+    document.body.appendChild(root);
+    router();
+  });
+  test("Then fetches the invoice to the API, it fails with a error code 404 error", async () => {
+    mockStore.bills.mockImplementationOnce(() => {
+      // mock bills in the store.js
+      return {
+        list: () => {
+          return Promise.reject(new Error("Error 404"));
+        },
+      };
+    });
+    window.onNavigate(ROUTES_PATH.Bills);
+    await new Promise(process.nextTick);
+    const message = screen.getByText(/Error 404/);
+    expect(message).toBeTruthy();
+  });
+
+  test("Then fetches the invoice in to the API and it fails with a 500 code error", async () => {
+    mockStore.bills.mockImplementationOnce(() => {
+      return {
+        list: () => {
+          return Promise.reject(new Error("Error 500"));
+        },
+      };
+    });
+    window.onNavigate(ROUTES_PATH.Bills);
+    await new Promise(process.nextTick);
+    const message = screen.getByText(/Error 500/);
+    expect(message).toBeTruthy();
   });
 });
