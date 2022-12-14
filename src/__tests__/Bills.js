@@ -62,6 +62,7 @@ describe("when a user clicks on the eye icon", () => {
     document.body.innerHTML = html;
 
     const onNavigate = (pathname) => {
+      //navigation of the bills
       document.body.innerHTML = ROUTES({ pathname });
     };
     const billsContainer = new Bills({
@@ -70,9 +71,11 @@ describe("when a user clicks on the eye icon", () => {
       localStorage: localStorageMock,
       store: null,
     });
+
     //Mocked Modal the fn stands for function
     $.fn.modal = jest.fn();
     //Mocked the clickHandle icon
+
     const handleClickIconEye = jest.fn(() => {
       billsContainer.handleClickIconEye;
     });
@@ -100,6 +103,7 @@ describe("When a user click the button 'Nouvelle note de frais'", () => {
     });
     //test function
     const OpenNewBill = jest.fn(billsPage.handleClickNewBill);
+    //Bills.js line20
     const btnNewBill = screen.getByTestId("btn-new-bill"); //new button
     btnNewBill.addEventListener("click", OpenNewBill); //event listener
     fireEvent.click(btnNewBill);
@@ -121,7 +125,7 @@ describe("When I get bills", () => {
     const getBills = jest.fn(() => bills.getBills()); //mocked Bills
     const value = await getBills();
     expect(getBills).toHaveBeenCalled(); //checking of the method is called
-    expect(value.length).toBe(4);
+    expect(value.length).toBe(4); //checking the title of bills
   });
 });
 // Test Erreur 404 et 500
