@@ -18,6 +18,7 @@ export default class NewBill {
     new Logout({ document, localStorage, onNavigate });
   }
   handleChangeFile = (e) => {
+    document.getElementById("message").hidden = true;
     e.preventDefault();
     const file = this.document.querySelector(`input[data-testid="file"]`)
       .files[0];
@@ -25,7 +26,8 @@ export default class NewBill {
     //[Bug Hunt] - Bills
     // Authorisation of correct format
     const formatAuthorisation = ["image/jpg", "image/png", "image/jpeg"];
-    let formatChecker = formatAuthorisation.includes(file.type);
+    const formatfileType = file.type;
+    let formatChecker = formatAuthorisation.includes(formatfileType);
 
     if (formatChecker) {
       //if the file type is good everything should continue

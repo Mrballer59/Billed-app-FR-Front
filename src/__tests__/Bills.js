@@ -37,7 +37,7 @@ describe("Given I am connected as an employee", () => {
       //added mention as asked in the kanban
       expect(windowIcon.classList.contains("active-icon")).toBe(true); // This has to be true instead of false.
     });
-
+    //sort from test
     test("Then bills should be ordered from earliest to latest", () => {
       document.body.innerHTML = BillsUI({ data: bills });
       const dates = screen
@@ -56,9 +56,9 @@ describe("Given I am connected as an employee", () => {
 describe("when a user clicks on the eye icon", () => {
   test("Then modal should open", () => {
     // the test the shows the click on the Eye Icon
-    Object.defineProperty(window, localStorage, { value: localStorageMock });
-    window.localStorage.setItem("user", JSON.stringify({ type: "Employee" }));
-    const html = BillsUI({ data: bills });
+    Object.defineProperty(window, localStorage, { value: localStorageMock }); //Simulate the data on localStorage
+    window.localStorage.setItem("user", JSON.stringify({ type: "Employee" })); //Simulate the user connection as a employé
+    const html = BillsUI({ data: bills }); //creating the Var that hold the employées invoice modal
     document.body.innerHTML = html;
 
     const onNavigate = (pathname) => {
@@ -66,6 +66,7 @@ describe("when a user clicks on the eye icon", () => {
       document.body.innerHTML = ROUTES({ pathname });
     };
     const billsContainer = new Bills({
+      // creating the invoice
       document,
       onNavigate,
       localStorage: localStorageMock,
@@ -77,13 +78,13 @@ describe("when a user clicks on the eye icon", () => {
     //Mocked the clickHandle icon
 
     const handleClickIconEye = jest.fn(() => {
-      billsContainer.handleClickIconEye;
+      billsContainer.handleClickIconEye; //simulate the click function
     });
     const firstEyeIcon = screen.getAllByTestId("icon-eye")[0];
     firstEyeIcon.addEventListener("click", handleClickIconEye);
     fireEvent.click(firstEyeIcon);
-    expect(handleClickIconEye).toHaveBeenCalled();
-    expect($.fn.modal).toHaveBeenCalled();
+    expect(handleClickIconEye).toHaveBeenCalled(); //verifing if the click event has been called or invoked
+    expect($.fn.modal).toHaveBeenCalled(); //verifing if the modal is called or invoked
   });
 });
 
@@ -108,7 +109,7 @@ describe("When a user click the button 'Nouvelle note de frais'", () => {
     btnNewBill.addEventListener("click", OpenNewBill); //event listener
     fireEvent.click(btnNewBill);
     // we check if the function is called when expected
-    expect(OpenNewBill).toHaveBeenCalled();
+    expect(OpenNewBill).toHaveBeenCalled(); //verifing if the new bill page has rendered
     expect(screen.getByText("Envoyer une note de frais")).toBeTruthy(); // new note de frais
   });
 });
@@ -117,15 +118,16 @@ describe("When a user click the button 'Nouvelle note de frais'", () => {
 describe("When I get bills", () => {
   test("Then it should render bills", async () => {
     const bills = new Bills({
+      //Getting invoice via store
       document,
       onNavigate,
       store: mockStore,
       localStorage: window.localStorage,
     });
-    const getBills = jest.fn(() => bills.getBills()); //mocked Bills
-    const value = await getBills();
-    expect(getBills).toHaveBeenCalled(); //checking of the method is called
-    expect(value.length).toBe(4); //checking the title of bills
+    const getBills = jest.fn(() => bills.getBills()); //mocked Bills Simulation du click
+    const value = await getBills(); //verification
+    expect(getBills).toHaveBeenCalled(); //checking if the method is called
+    expect(value.length).toBe(4); //checking if the length of the title of bills is 4 in (store.js)
   });
 });
 // Test Erreur 404 et 500
@@ -150,7 +152,8 @@ describe("when a error occurs with the API", () => {
   });
   test("Then fetches the invoice to the API, it fails with a error code 404 error", async () => {
     mockStore.bills.mockImplementationOnce(() => {
-      // mock bills in the store.js
+      //Changing the behaviour to generate an error
+
       return {
         list: () => {
           return Promise.reject(new Error("Error 404"));

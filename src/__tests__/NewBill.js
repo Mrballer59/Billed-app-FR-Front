@@ -119,7 +119,7 @@ describe("When a user upload the attached file in the correct format", () => {
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bill page", () => {
     test("fetches New Bills from mock API", async () => {
-      //mocked API
+      //mocked Login + mock API
       beforeEach(() => {
         jest.spyOn(mockStore, "bills");
         Object.defineProperty(window, "localStorage", {
